@@ -1,7 +1,12 @@
+require("dotenv").config();
 const express = require("express");
-const whoiser = require("whoiser");
+const axios = require("axios");
 const app = express();
 app.use(express.json());
+
+const GODADDY_API_URL = "https://api.ote-godaddy.com/v1/domains/available"; // Use the production URL when ready
+const GODADDY_API_KEY = process.env.GODADDY_API_KEY;
+const GODADDY_API_SECRET = process.env.GODADDY_API_SECRET;
 
 app.post("/check-domains", async (req, res) => {
   const domains = req.body.domains;
@@ -10,21 +15,19 @@ app.post("/check-domains", async (req, res) => {
   }
 
   try {
-    const results = await Promise.all(
-      domains.map(async (domain) => {
-        try {
-          const info = await whoiser.domain(domain);
-          return { domain, available: false, info };
-        } catch (error) {
-          // Assuming that an error indicates domain availability
-          return { domain, available: true };
-        }
-      })
+    const response = await axios.post(
+      GODADDY_API_URL,
+      { domains },
+      {
+        headers: {
+          Authorization: `sso-key ${GODADDY_API_KEY}:${GODADDY_API_SECRET}`,
+        },
+      }
     );
 
-    res.json(results);
+    res.json(response.data);
   } catch (error) {
-    res.status(500).send("An error occurred while processing your request");
+    // Error handling (omitted for brevity)
   }
 });
 
