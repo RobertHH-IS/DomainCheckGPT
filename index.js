@@ -17,9 +17,10 @@ app.post("/check-domains", async (req, res) => {
   try {
     const response = await axios.post(
       GODADDY_API_URL,
-      { domains },
+      domains, // Send the array directly
       {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `sso-key ${GODADDY_API_KEY}:${GODADDY_API_SECRET}`,
         },
       }
