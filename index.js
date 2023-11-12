@@ -27,7 +27,20 @@ app.post("/check-domains", async (req, res) => {
 
     res.json(response.data);
   } catch (error) {
-    // Error handling (omitted for brevity)
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Error response:", error.response.data);
+      res.status(error.response.status).send(error.response.data);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("No response:", error.request);
+      res.status(504).send("Gateway Timeout");
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Error:", error.message);
+      res.status(500).send("Internal Server Error");
+    }
   }
 });
 
