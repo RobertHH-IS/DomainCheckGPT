@@ -4,7 +4,7 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 
-const GODADDY_API_URL = "https://api.ote-godaddy.com/v1/domains/available"; // Use the production URL when ready
+const GODADDY_API_URL = "https://api.godaddy.com/v1/domains/available"; // Use the production URL when ready
 const GODADDY_API_KEY = process.env.GODADDY_API_KEY;
 const GODADDY_API_SECRET = process.env.GODADDY_API_SECRET;
 
